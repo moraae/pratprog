@@ -76,4 +76,27 @@ public class PaisTest
 		pais = pais.carregar(id);
 		assertEquals("testa exclusao", pais, copia);
 	}
+	@Test
+	public void testMaiorPopulacao()
+	{
+	   System.out.println("maior populacao");
+	   Pais maiorP = new Pais(3, "China", 1300000000, 9.59);
+	   Pais obtido = maiorP.maiorPopulacao();
+	   assertEquals("test maiorPopulacao", maiorP, obtido);
+	}
+	@Test
+	public void testMenorArea()
+	{
+	   System.out.println("menor area");
+	   Pais maiorP = new Pais(5, "Argentina", 40600000, 2.27);
+	   Pais obtido = maiorP.menorArea();
+	   assertEquals("test menorArea", maiorP, obtido);
+	}
+	@Test
+	public void testVetorTresPaises()
+	{
+	   System.out.println("vetor tres paises");
+	   String[] vetor = pais.vetorTresPaises();
+	   assertEquals("test vetorTresPaises", 3, vetor.length);
+	}
 }

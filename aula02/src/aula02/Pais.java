@@ -44,8 +44,9 @@ public class Pais
 		return DriverManager.getConnection("jdbc:mysql://localhost/aula02?user=alunos&password=alunos");
 	}
 	//construtores
-	public Pais(String nome, long populacao, double area)
+	public Pais(int id, String nome, long populacao, double area)
 	{
+		setId(id);
 		setNome(nome);
 		setPopulacao(populacao);
 		setArea(area);
@@ -219,90 +220,89 @@ public class Pais
 		}
 		return paises;
 	}
-	//retorna pais com maior populacao
-	public String maiorPopulacao()
-	{
-	   String sqlSelect = "select * from pais where populacao = (select max(populacao) from pais)";
-	   try(Connection conn = conexao();
-	 		  PreparedStatement stm = conn.prepareStatement(sqlSelect);)
-	   {
-	      stm.execute();
-	      try(ResultSet rs = stm.executeQuery();)
-	      {
-	         while(rs.next())
-	         {
-	            this.setId(rs.getInt("id"));
-	            this.setNome(rs.getString("nome"));
-	            this.setPopulacao(rs.getLong("populacao"));
-	            this.setArea(rs.getDouble("area"));
-	         }
-	      }catch(SQLException e)
-	      {
-	         e.printStackTrace();
-	      }
-	   }catch(SQLException e1)
-	   {
-	      System.out.println(e1.getStackTrace());
-	   }
-	   return toString();
-	}
-	//retorna pais com menor area
-	public String menorArea()
-	  {
-	      String sqlSelect = "select * from pais where area = (select min(area) from pais)";
-	      try(Connection conn = conexao();
-	    		  PreparedStatement stm = conn.prepareStatement(sqlSelect);)
-	      {
-	         stm.execute();
-	         try(ResultSet rs = stm.executeQuery();)
-	         {
-	            if(rs.next())
-	            {
-	               this.setId(rs.getInt("id"));
-	               this.setNome(rs.getString("nome"));
-	               this.setPopulacao(rs.getLong("populacao"));
-	               this.setArea(rs.getDouble("area"));
-	            }
-	         }catch(SQLException e)
-	         {
-	            e.printStackTrace();
-	         }
-	      }catch(SQLException e1)
-	      {
-	         System.out.println(e1.getStackTrace());
-	      }
-	      return toString();
-	  }
-	//retorna vetor tres países
-	public String[] vetorTresPaises()
-	{
-	      String[] vetor = new String[3];
-	      String sqlSelect = "select * from pais";
-	            try(Connection conn = conexao();
-	            		PreparedStatement stm = conn.prepareStatement(sqlSelect);)
-	            {
-	               stm.execute();
-	               try(ResultSet rs = stm.executeQuery();)
-	               {
-	            	  for(int i = 0; i < vetor.length; i++)
-	            	  {
-	            		  if(rs.next())
-	            		  {  
-	            			  this.setId(rs.getInt("id"));
-	            			  this.setNome(rs.getString("nome"));
-	            			  this.setPopulacao(rs.getLong("populacao"));
-	            			  this.setArea(rs.getDouble("area"));
-	            			  vetor[i] = toString();
-	            		  }
-	            	  }
-	               }catch(SQLException e)
-	               {
-	                  e.printStackTrace();
-	               }
-	             }catch(SQLException e1)
-	             {
-	               System.out.println(e1.getStackTrace());
-	             }              
-	      return vetor;
-	}
+	 //maiorPopulacao
+	   public Pais maiorPopulacao()
+		{
+			String sqlSelect = "select * from pais where populacao = (select max(populacao) from pais)";
+			Pais pais = new Pais();
+			try(Connection conn = conexao();
+				PreparedStatement stm = conn.prepareStatement(sqlSelect);)
+			{
+				try(ResultSet rs = stm.executeQuery())
+				{
+					if(rs.next())
+					{
+						pais.setId(rs.getInt("id"));
+						pais.setNome(rs.getString("nome"));
+						pais.setPopulacao(rs.getLong("populacao"));
+						pais.setArea(rs.getDouble("area"));
+					}
+				}catch(Exception e)
+				{
+					e.printStackTrace();
+				}
+			}catch(SQLException e1)
+			{
+				System.out.println(e1.getStackTrace());
+			}
+			return pais;
+		}
+	 //menorArea
+		public Pais menorArea()
+		{
+			String sqlSelect = "select * from pais where area = (select min(area) from pais)";
+			Pais pais = new Pais();
+			try(Connection conn = conexao();
+				PreparedStatement stm = conn.prepareStatement(sqlSelect);)
+			{
+				try(ResultSet rs = stm.executeQuery())
+				{
+					if(rs.next())
+					{
+						pais.setId(rs.getInt("id"));
+						pais.setNome(rs.getString("nome"));
+						pais.setPopulacao(rs.getLong("populacao"));
+						pais.setArea(rs.getDouble("area"));
+					}
+				}catch(Exception e)
+				{
+					e.printStackTrace();
+				}
+			}catch(SQLException e1)
+			{
+				System.out.println(e1.getStackTrace());
+			}
+			return pais;
+		}
+		//vetorTresPaises
+		public String[] vetorTresPaises()
+		{
+		    String[] vetor = new String[3];
+	       int i = 0;
+		    String sqlSelect = "select * from pais";
+		    try(Connection conn = conexao();
+		     		PreparedStatement stm = conn.prepareStatement(sqlSelect);)
+		    {
+		        try(ResultSet rs = stm.executeQuery();)
+		        {
+	         	  while(rs.next() && i < vetor.length)
+	        		  {  
+						  Pais pais = new Pais();
+	        			  pais.setId(rs.getInt("id"));
+	           	  	  pais.setNome(rs.getString("nome"));
+	           		  pais.setPopulacao(rs.getLong("populacao"));
+	           		  pais.setArea(rs.getDouble("area"));
+	           	     vetor[i] = pais.toString();
+	                 i++;
+	           	  }
+	            }catch(SQLException e)
+	              {
+	                 e.printStackTrace();
+	              }
+	        }catch(SQLException e1)
+	        {
+	           System.out.println(e1.getStackTrace());
+	        }              
+	     return vetor;
+		}
 }
